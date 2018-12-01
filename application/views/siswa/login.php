@@ -5,7 +5,7 @@ $this->load->view('umum/header');
   <center>
   <div class="container">
     <div class="section">
-      <img src="./assets/img/logo.png" alt="">
+      <img src="./assets/img/<?=get_konfig('LOGO')?>" alt="">
       <h3 class="grey-text">Login Siswa</h3>
     </div>
     <div class="card grey lighten-4 padding-r-4 padding-l-4 width-4">
