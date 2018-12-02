@@ -1,6 +1,6 @@
   <!-- Menu khusus admin -->
   <ul id="nav-mobile" class="sidenav sidenav-fixed collapsible collapsible-accordion">
-    <li><center><img src="assets/img/<?=get_konfig('LOGO')?>" alt=""></center></li>
+    <li><center><img src="assets/img/<?=get_konfig('LOGO')?>?x=<?=string_acak(10)?>" alt="" class="logo_institusi"></center></li>
     <li><a href="#" class=" waves-effect waves-green">Beranda</a></li>
     <li>
       <a href="#" class="collapsible-header waves-effect waves-green" tabindex="0">Data</a>
@@ -13,7 +13,7 @@
         </ul>
       </div>
     </li>
-    <li><a href="#" class="waves-effect waves-green" tabindex="0">Pengaturan Sistem</a></li>
+    <li><a href="<?=site_url('?d=admin&c=konfig')?>" class="waves-effect waves-green" tabindex="0">Pengaturan Sistem</a></li>
     <li><a href="<?=site_url('?d=admin&c=profile')?>" class="waves-effect waves-green" tabindex="0">Akun Saya</a></li>
     <li><a href="#" class="waves-effect waves-green btn-keluar" tabindex="0">Keluar</a></li>
   </ul>
