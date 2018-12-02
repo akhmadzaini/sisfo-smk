@@ -23,3 +23,13 @@ function get_konfig($id){
   $r = $CI->db->query($sql)->row();
   return $r->value;
 }
+
+// String unik dengan panjang tertentu
+function string_acak($pjg) {
+  $char = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  $char = str_shuffle($char);
+  for($i = 0, $rand = '', $l = strlen($char) - 1; $i < $pjg; $i ++) {
+      $rand .= $char{mt_rand(0, $l)};
+  }
+  return $rand;
+}
