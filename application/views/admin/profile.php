@@ -6,7 +6,7 @@ $this->load->view('umum/header');
 <main>
   <div class="container">
     <div class="row">
-      <div class="col s12 m8 offset-m1 xl7 offset-xl1">
+      <div class="col s12 m8 offset-m1">
         <h3 class="header">Profil akun saya</h3>
         
         <form id="frm-profil">

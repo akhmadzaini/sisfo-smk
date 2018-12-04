@@ -6,7 +6,7 @@
       <a href="#" class="collapsible-header waves-effect waves-green" tabindex="0">Data</a>
       <div class="collapsible-body">
         <ul>
-          <li><a href="color.html">- Siswa</a></li>
+          <li><a href="<?=site_url('?d=admin/data&c=siswa')?>">- Siswa</a></li>
           <li><a href="color.html">- Tahun Akademik</a></li>
           <li><a href="color.html">- Administrasi Siswa</a></li>
           <li><a href="color.html">- Berkas Akademik</a></li>

@@ -33,3 +33,22 @@ function string_acak($pjg) {
   }
   return $rand;
 }
+
+// ambil data jurusan
+function get_jurusan(){
+  $CI =& get_instance();
+  $sql = "SELECT kode, nama
+          FROM jurusan
+          ORDER BY kode";
+  return $CI->db->query($sql)->result();
+}
+
+// ambil data jurusan
+function get_angkatan(){
+  $CI =& get_instance();
+  $sql = "SELECT DISTINCT angkatan
+          FROM siswa
+          WHERE angkatan IS NOT NULL
+          ORDER BY angkatan";
+  return $CI->db->query($sql)->result();
+}
