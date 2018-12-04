@@ -6,7 +6,7 @@ $this->load->view('umum/header');
 <main>
   <div class="container">
     <div class="row">
-      <div class="col s12 m8 offset-m1 xl7 offset-xl1">
+      <div class="col s12 m8 offset-m1">
         <h3 class="header">Pengaturan Sistem</h3>
         
         <form id="frm-konfig" action="<?=site_url('?d=admin&c=konfig&m=submit_edit')?>" enctype="multipart/form-data" method="POST">

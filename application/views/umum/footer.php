@@ -21,6 +21,8 @@
     $(function() {
       $('.collapsible').collapsible();
       $('.sidenav').sidenav();
+      $('.modal').modal();
+      $('select').formSelect();
 
       $(document).on('click', '.btn-keluar', function () {
         swal({
