@@ -57,12 +57,17 @@ $this->load->view('umum/header');
                 <tbody>
                   <tr v-for="baris, idx in dataSiswa">
                     <td>{{baris.nisn}}</td>
-                    <td>{{baris.nama}}</td>
+                    <td>
+                      {{baris.nama}}
+                      <div v-if="(baris.status == 2)" class="white-text chip green">lulus ({{baris.tahun_lulus}})</div>
+                      <div v-if="(baris.status == 3)" class="white-text chip red">keluar ({{baris.tahun_keluar}})</div>
+                    </td>
                     <td>{{baris.jurusan}}</td>
                     <td>{{baris.angkatan}}</td>
                     <td>
                       <a href="javascript:void(0)" class="tooltipped" @click="editSiswa(idx, baris)"><i class="tiny material-icons left" data-position="top" data-tooltip="sunting siswa">edit</i></a>
                       <a href="javascript:void(0)" class="tooltipped" @click="hapusSiswa(baris.nisn)"><i class="tiny material-icons left" data-position="top" data-tooltip="hapus siswa">delete</i></a>
+                      <a href="javascript:void(0)" class="tooltipped" @click="suntingStatusSiswa(baris)"><i class="tiny material-icons left" data-position="top" data-tooltip="status">compare_arrows</i></a>
                     </td>                    
                   </tr>
                 </tbody>
@@ -75,47 +80,47 @@ $this->load->view('umum/header');
           <div id="modal-editor-siswa" class="modal">
             <form action="<?=site_url('?d=admin/data&c=siswa&m=submit_edit')?>" method="post" id="frm-editor-siswa">
               <div class="modal-content">
-                <h4>siswa Baru</h4>
+                <h4>Sunting Data Siswa</h4>
 
-                  <div class="row">
-                    <div class="input-field col s12">
-                      <input id="nisn" type="text" class="validate" name="nisn" required="" v-model="nisn" placeholder="NISN (Nomor Induk Siswa)">
-                      <label for="nisn" class="active">NISN (Nomor Induk Siswa)</label>
-                    </div>
+                <div class="row">
+                  <div class="input-field col s12">
+                    <input id="nisn" type="text" class="validate" name="nisn" required="" v-model="nisn" placeholder="NISN (Nomor Induk Siswa)">
+                    <label for="nisn" class="active">NISN (Nomor Induk Siswa)</label>
                   </div>
+                </div>
 
-                  <div class="row">
-                    <div class="input-field col s12">
-                      <input id="nama" type="text" class="validate" name="nama" required="" v-model="nama" placeholder="Nama lengkap">
-                      <label for="nama" class="active">Nama Lengkap</label>
-                    </div>
+                <div class="row">
+                  <div class="input-field col s12">
+                    <input id="nama" type="text" class="validate" name="nama" required="" v-model="nama" placeholder="Nama lengkap">
+                    <label for="nama" class="active">Nama Lengkap</label>
                   </div>
+                </div>
 
-                  <div class="row">
-                    <div class="input-field col s12">
-                      <input id="password" type="text" class="validate" name="password" required="" v-model="password" placeholder="Password">
-                      <label for="password" class="active">Password</label>
-                    </div>
+                <div class="row">
+                  <div class="input-field col s12">
+                    <input id="password" type="text" class="validate" name="password" required="" v-model="password" placeholder="Password">
+                    <label for="password" class="active">Password</label>
                   </div>
+                </div>
 
-                  <div class="row">
-                    <div class="input-field col s12">
-                      <input id="angkatan" type="text" class="validate" name="angkatan" required="" v-model="angkatan" placeholder="Angkatan">
-                      <label for="angkatan" class="active">Angkatan</label>
-                    </div>
+                <div class="row">
+                  <div class="input-field col s12">
+                    <input id="angkatan" type="text" class="validate" name="angkatan" required="" v-model="angkatan" placeholder="Angkatan">
+                    <label for="angkatan" class="active">Angkatan</label>
                   </div>
+                </div>
 
-                  <div class="row">
-                    <div class="input-field col s12">
-                      <?php $jurusan = get_jurusan()?>
-                      <select name="jurusan_kode" id="jurusan_kode">
-                        <?php foreach($jurusan as $r):?>
-                          <option value="<?=$r->kode?>"><?=$r->nama?></option>
-                        <?php endforeach?>
-                      </select>
-                      <label for="jurusan_kode" class="active">Jurusan</label>
-                    </div>
+                <div class="row">
+                  <div class="input-field col s12">
+                    <?php $jurusan = get_jurusan()?>
+                    <select name="jurusan_kode" id="jurusan_kode">
+                      <?php foreach($jurusan as $r):?>
+                        <option value="<?=$r->kode?>"><?=$r->nama?></option>
+                      <?php endforeach?>
+                    </select>
+                    <label for="jurusan_kode" class="active">Jurusan</label>
                   </div>
+                </div>
 
               </div>
               <div class="modal-footer">
@@ -124,8 +129,8 @@ $this->load->view('umum/header');
               </div>
             </form>
           </div>
-          <!-- Modal eksporexcel -->
 
+          <!-- Modal eksporexcel -->
           <div id="modal-unggah-excel" class="modal">
             <form id="frm-unggah-excel" action="?d=admin/data&c=siswa&m=submit_excel" enctype="multipart/form-data" method="POST">
 
@@ -171,6 +176,51 @@ $this->load->view('umum/header');
                 <button type="button" class="modal-close waves-effect btn-flat">Batal</button>
               </div>
 
+            </form>
+          </div>
+
+          <!-- Modal edit status siswa -->
+          <div id="modal-status-siswa" class="modal">
+            <form action="<?=site_url('?d=admin/data&c=siswa&m=submit_status')?>" method="post" id="frm-status-siswa">
+              
+              <div class="modal-content">
+                <h4>Sunting Status Siswa</h4>
+
+                <div class="row">
+                  <div class="input-field col s12">
+                    <input id="nisn" type="text" class="validate" name="nisn" readonly="true" required="" v-model="nisn" placeholder="NISN (Nomor Induk Siswa)">
+                    <label for="nisn" class="active">NISN (Nomor Induk Siswa)</label>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="input-field col s12">
+                    <input id="nama" type="text" class="validate" name="nama" readonly="true" required="" v-model="nama" placeholder="Nama lengkap">
+                    <label for="nama" class="active">Nama Lengkap</label>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="input-field col l4">
+                    <select name="status" v-model="status">
+                      <option value="1">Aktif</option>
+                      <option value="2">Lulus</option>
+                      <option value="3">Keluar</option>
+                    </select>
+                    <label for="nama" class="active">Status</label>
+                  </div>
+                  <div class="input-field col l8">
+                    <input type="text" name="tahun" :disabled="(status == 1)" :required="(status != 1)" placeholder="Tahun">
+                    <label class="active">Tahun</label>
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="modal-footer">
+                <button type="submit" class="btn blue waves-effect">simpan</button>
+                <button type="button" class="modal-close waves-effect btn-flat">batal</button>
+              </div>
             </form>
           </div>
 
@@ -243,8 +293,22 @@ $this->load->view('umum/footer');
             xhttp.send("nisn=" + nisn);
           }
         });
+      },
+      suntingStatusSiswa: function(siswa) {
+        vueStatusSiswa.nisn = siswa.nisn;
+        vueStatusSiswa.nama = siswa.nama;       
+        $('#modal-status-siswa').modal('open');
       }
     } 
+  });
+
+  var vueStatusSiswa = new Vue({
+    el: '#modal-status-siswa',
+    data: {
+      nisn: 'kosong',
+      nama: 'kosong',
+      status: 1,
+    },
   });
 
   $(function() {
@@ -273,6 +337,19 @@ $this->load->view('umum/footer');
         $('body').waitMe('hide');
         $('#frm-filter').submit();
         $('#modal-editor-siswa').modal('close');
+      }
+    });
+
+    $('#frm-status-siswa').ajaxForm({
+      dataType: 'json',
+      beforeSubmit: function(){
+        $('body').waitMe();
+      },
+      complete: function(xhr) {
+        console.log(xhr.responseJSON);
+        $('body').waitMe('hide');
+        $('#frm-filter').submit();
+        $('#modal-status-siswa').modal('close');
       }
     });
 
