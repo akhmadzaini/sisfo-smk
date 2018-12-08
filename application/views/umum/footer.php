@@ -23,6 +23,7 @@
       $('.sidenav').sidenav();
       $('.modal').modal();
       $('select').formSelect();
+      $('.tooltipped').tooltip();
 
       $(document).on('click', '.btn-keluar', function () {
         swal({
