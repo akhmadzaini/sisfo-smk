@@ -5,11 +5,11 @@ require_once APPPATH .  'controllers/admin/Home_admin.php';
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class Siswa extends Home_admin {
-  public function index() {    
+  function index() {    
     $this->load->view('admin/data/siswa/index');
   }
 
-  public function submit_excel(){
+  function submit_excel(){
     // header('Content-Type: text/event-stream');
     header('Cache-Control: no-cache');
     ini_set('max_execution_time', 0);
@@ -47,6 +47,36 @@ class Siswa extends Home_admin {
 
   }
 
+  function browse_siswa(){
+    $jurusan_kode = $this->input->post('jurusan');
+    $angkatan = $this->input->post('angkatan');
+    $sql = "SELECT a.*, b.nama AS jurusan
+            FROM siswa a 
+            LEFT JOIN jurusan b ON a.jurusan_kode = b.kode
+            WHERE a.angkatan = '$angkatan' AND a.jurusan_kode = '$jurusan_kode'
+            ORDER BY nama";
+    log_message('custom', $sql);
+    json_output(200, ['data' => $this->db->query($sql)->result_array()]);
+  }
+
+  function submit_edit() {
+    $post = $this->input->post();
+    $this->db->set('nama', $post['nama']);
+    $this->db->set('jurusan_kode', $post['jurusan_kode']);
+    $this->db->set('angkatan', $post['angkatan']);
+    $this->db->set('password', $post['password']);
+    $this->db->where('nisn', $post['nisn']);
+    $this->db->update('siswa');
+    json_output(200, array('jml_update' => $this->db->affected_rows(), 'post' => $post));
+  }
+
+  function hapus() {
+    $nisn = $this->input->post('nisn');
+    $this->db->where('nisn', $nisn);
+    $this->db->delete('siswa');
+    json_output(200, array('terhapus' => $this->db->affected_rows()));
+  }
+
   private function __header_excel_ok($data){
     $header_resmi = ['A' => 'NISN',
                     'B' => 'NAMA',
@@ -56,16 +86,12 @@ class Siswa extends Home_admin {
   }
 
   private function __simpan_data($data){
-    echo '<div id="progress" style="width:500px;border:1px solid #ccc;"></div>';
-    echo '<div id="link-balik"></div>';
+    myob('<div id="progress" style="width:500px;border:1px solid #ccc;"></div><div id="link-balik"></div>');
     $jml_error = 0;
     $jurusan_kode = $this->input->post('jurusan_kode');
     $angkatan = $this->input->post('angkatan');
+    $this->db->trans_start();
     foreach(range(2, count($data)) as $idx){
-      if ($this->db->conn_id->ping() === FALSE){
-        sleep(1);
-        $this->db->reconnect();
-      }
       $db_debug = $this->db->db_debug; //save setting
       $this->db->db_debug = FALSE; //disable debugging for queries
 
@@ -76,27 +102,25 @@ class Siswa extends Home_admin {
       $this->db->set('angkatan', $angkatan);
       $this->db->insert('siswa');
       $percent = 500 * $idx / count($data);
-      echo '<script language="javascript">
+      myob('<script language="javascript">
         document.getElementById("progress").innerHTML="<div style=\"width:'.$percent.';background-color:#ddd;\">&nbsp;</div>";
-      </script>';
+      </script>');
       $error = $this->db->error();
       if($error['code'] != 0){
-        echo '<span style="color: red">Gagal memproses : ' . $data[$idx]['B'] . '</span> ==> '. $error['message'] .'<br>';
+        myob('<span style="color: red">Gagal memproses : ' . $data[$idx]['B'] . '</span> ==> '. $error['message'] .'<br>');
         $jml_error ++;
       }      
       $this->db->db_debug = $db_debug; //restore setting
-      flush();
-      ob_flush();
-      usleep(1);
     }
+    $this->db->trans_complete();
     if($jml_error > 0){
-      echo '<script language="javascript">
+      myob('<script language="javascript">
         document.getElementById("link-balik").innerHTML="<a href=\"?d=admin/data&c=siswa\">kembali ke laman sebelumnya</a>";
-      </script>';
+      </script>');
     }else{
-      echo '<script language="javascript">
+      myob('<script language="javascript">
         document.location.href="?d=admin/data&c=siswa&angkatan=' . $angkatan . '&jurusan_kode=' . $jurusan_kode .
-      '";</script>';
+      '";</script>');
     }
   }
 }

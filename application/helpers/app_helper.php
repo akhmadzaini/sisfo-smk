@@ -10,7 +10,6 @@ function json_output($statusHeader,$response){
   $ci =& get_instance();
   $ci->output->set_content_type('application/json');
   $ci->output->set_status_header($statusHeader);
-  // $ci->output->set_output(json_encode($response));
   echo json_encode($response);
 }
 
@@ -51,4 +50,12 @@ function get_angkatan(){
           WHERE angkatan IS NOT NULL
           ORDER BY angkatan";
   return $CI->db->query($sql)->result();
+}
+
+// fungsi output buffer
+function myob($str) {
+  echo $str;
+  ob_flush();
+  flush();
+  usleep(1);
 }
