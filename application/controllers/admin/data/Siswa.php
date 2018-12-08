@@ -70,6 +70,27 @@ class Siswa extends Home_admin {
     json_output(200, array('jml_update' => $this->db->affected_rows(), 'post' => $post));
   }
 
+  function submit_status() {
+    $post = $this->input->post();
+    $this->db->set('status', $post['status']);
+    if($post['status'] == 1){
+      $this->db->set('tahun_keluar', 'null', false);
+      $this->db->set('tahun_lulus', 'null', false);
+    }
+    if($post['status'] == 2){
+      $this->db->set('tahun_keluar', 'null', false);
+      $this->db->set('tahun_lulus', $post['tahun']);
+    }
+    if($post['status'] == 3){
+      $this->db->set('tahun_keluar', $post['tahun']);
+      $this->db->set('tahun_lulus', 'null', false);
+    }
+    $this->db->set('status', $post['status']);
+    $this->db->where('nisn', $post['nisn']);
+    $this->db->update('siswa');
+    json_output(200, ['post' => $post]);
+  }
+
   function hapus() {
     $nisn = $this->input->post('nisn');
     $this->db->where('nisn', $nisn);
