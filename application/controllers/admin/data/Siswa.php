@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-require_once FCPATH . 'vendor/autoload.php';
 require_once APPPATH .  'controllers/admin/Home_admin.php';
+require_once FCPATH . 'vendor/autoload.php';
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class Siswa extends Home_admin {
