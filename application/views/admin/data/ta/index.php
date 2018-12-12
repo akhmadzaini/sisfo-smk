@@ -45,7 +45,12 @@ $this->load->view('umum/header');
             <tr v-for="baris, key in angkatan_jurusan">
               <td>{{baris.angkatan}}</td>
               <td>{{baris.jurusan}}</td>
-              <td><span :id="'<?=$ta?>-' + baris.angkatan + '-' + baris.jurusan_kode">sedang mengambil data...</span>{{muatDetail(<?=$ta?>, baris.angkatan, baris.jurusan_kode)}}</td>
+              <td>
+                <span :id="'<?=$ta?>-' + baris.angkatan + '-' + baris.jurusan_kode"></span>{{muatDetail(<?=$ta?>, baris.angkatan, baris.jurusan_kode)}}
+                <a :href="'?d=admin/data&c=ta&m=detail&ta=<?=$ta?>&angkatan='+ baris.angkatan + '&jurusan_kode=' + baris.jurusan_kode" class="btn-flat">
+                  <i class="material-icons">open_in_new</i>
+                </a>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -96,23 +101,20 @@ $this->load->view('umum/footer');
       angkatan_jurusan: <?=json_encode($angkatan_jurusan)?>,
     },
     methods: {
-      muatDetail: function(ta, angkatan, jurusan_kode){        
-        var xhttp = new XMLHttpRequest();
-        
-        xhttp.onreadystatechange = function() {
-          if (this.readyState == 4 && this.status == 200) {
-            var data = JSON.parse(this.responseText);
-            var tampilan = '<div class="white-text chip green">'+ data.terbuka +' terbuka</div> \
-            <div class="white-text chip red">'+ data.terkunci +' terkunci</div>';
-            document.getElementById(ta + '-' + angkatan + '-' + jurusan_kode).innerHTML = tampilan;
-          }else{
-            document.getElementById(ta + '-' + angkatan + '-' + jurusan_kode).innerHTML = 'sedang mengambil data...';
-          }
+      muatDetail: function(ta, angkatan, jurusan_kode){ 
+        const url = "?d=admin/data&c=ta&m=get_detail_angkatan_jurusan";
+        const data = {
+          ta: ta,
+          angkatan: angkatan,
+          jurusan_kode: jurusan_kode
         };
-        
-        xhttp.open("POST", "?d=admin%2Fdata&c=ta&m=get_detail_angkatan_jurusan", true);
-        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");        
-        xhttp.send('ta=' + ta + '&angkatan=' + angkatan + '&jurusan_kode=' + jurusan_kode);
+        const selector = '#' + ta + '-' + angkatan + '-' + jurusan_kode;
+        $(selector).html('sedang mengambil data...');
+        $.post(url, data, function(hasil) {
+          var tampilan = '<div class="white-text chip green">'+ hasil.terbuka +' terbuka</div> \
+            <div class="white-text chip red">'+ hasil.terkunci +' terkunci</div>';
+          $(selector).html(tampilan);
+        });
       }
     }
   });

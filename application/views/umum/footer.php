@@ -24,6 +24,7 @@
       $('.modal').modal();
       $('select').formSelect();
       $('.tooltipped').tooltip();
+      $('.chips').chips();
 
       // simple hack for select validation
       $("select[required]").css({
