@@ -6,7 +6,7 @@ class html_gen{
     $CI =& get_instance();
     $sql = "SELECT kode, tahun, bagian
             FROM tahun_akademik
-            ORDER BY kode";
+            ORDER BY kode DESC";
     $ta = $CI->db->query($sql)->result();
 
     $options = '';

@@ -4,6 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 require_once APPPATH .  'controllers/admin/Home_admin.php';
 
 class Ta extends Home_admin {
+
   function index(){
     $data['ta'] = $this->input->get('ta');
     if($data['ta'] != ''){
@@ -52,7 +53,6 @@ class Ta extends Home_admin {
   }
 
   function get_detail_angkatan_jurusan(){
-    // sleep(3);
     $ta = $this->input->post('ta');
     $angkatan = $this->input->post('angkatan');
     $jurusan_kode = $this->input->post('jurusan_kode');
@@ -70,4 +70,55 @@ class Ta extends Home_admin {
 
     json_output(200, ['terbuka' => $terbuka, 'terkunci' => $terkunci]);
   }
+
+  function detail() {
+    $ta = $this->input->get('ta');
+    $angkatan = $this->input->get('angkatan');
+    $jurusan_kode = $this->input->get('jurusan_kode');
+
+    $data['ta'] = $ta;
+
+    $sql = "SELECT a.siswa_nisn AS nisn, b.nama, a.`status` , a.info_administrasi 
+    FROM siswa_akademik a
+    LEFT JOIN siswa b ON a.siswa_nisn = b.nisn 
+    WHERE a.tahun_akademik_kode = '$ta'
+    AND b.angkatan = '$angkatan'
+    AND b.jurusan_kode = '$jurusan_kode'
+    ORDER BY b.nama";
+
+    // 1. data siswa yang tercatat pada tahun akademik
+    $data['siswa'] = $this->db->query($sql)->result();
+
+    // 2. detail keterangan tahun akademik
+    $data['ta_str'] = $this->db_common->get_ta($ta);
+    
+    // 3. detail jurusan
+    $data['jurusan'] = $this->db_common->get_jurusan($jurusan_kode);
+
+    $this->load->view('admin/data/ta/detail', $data);
+
+  }
+
+  function change_status() {
+    $ta = $this->input->post('ta');
+    $nisn = $this->input->post('nisn');
+    $status = $this->input->post('status');
+
+    $status_str = ($status == 'true') ? '1' : '2';
+    $sql = "UPDATE siswa_akademik SET status = $status_str
+            WHERE tahun_akademik_kode = '$ta' AND siswa_nisn = '$nisn'";
+    $this->db->query($sql);
+    json_output(200, ['pesan' => 'ok']);
+  }
+
+  function change_info() {
+    $ta = $this->input->post('ta');
+    $nisn = $this->input->post('nisn');
+    $info = $this->input->post('info');
+    $sql = "UPDATE siswa_akademik SET info_administrasi = '$info'
+            WHERE tahun_akademik_kode = '$ta' AND siswa_nisn = '$nisn'";
+    $this->db->query($sql);
+    json_output(200, ['pesan' => 'ok']);
+  }
+
 }

@@ -14,11 +14,19 @@ class Auth extends CI_Controller {
   }
 
 	public function login(){
-		$this->load->view('siswa/login');
+    if(isset($this->session->login) and $this->session->akses=='siswa'){
+      alihkan_laman('?d=siswa&c=dashboard');
+    }else{
+      $this->load->view('siswa/login');
+    }
   }
 
   public function login_admin(){
-		$this->load->view('admin/login');
+    if(isset($this->session->login) and $this->session->akses=='admin'){
+      alihkan_laman('?d=admin&c=dashboard');
+    }else{
+      $this->load->view('admin/login');
+    }
   }
 
   public function submit_login_siswa(){
