@@ -25,6 +25,7 @@
       $('select').formSelect();
       $('.tooltipped').tooltip();
       $('.chips').chips();
+      // $('.dropdown-trigger').dropdown();
 
       // simple hack for select validation
       $("select[required]").css({

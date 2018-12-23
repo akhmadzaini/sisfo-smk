@@ -8,8 +8,6 @@
         <ul>
           <li><a href="?d=admin/data&c=siswa">- Siswa</a></li>
           <li><a href="?d=admin/data&c=ta">- Tahun Akademik</a></li>
-          <li><a href="color.html">- Administrasi Siswa</a></li>
-          <li><a href="color.html">- Berkas Akademik</a></li>
         </ul>
       </div>
     </li>
