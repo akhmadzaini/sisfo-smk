@@ -121,4 +121,81 @@ class Ta extends Home_admin {
     json_output(200, ['pesan' => 'ok']);
   }
 
+  function get_dokumen() {
+    $ta = $this->input->post('ta');
+    $nisn = $this->input->post('nisn');
+    $sql = "SELECT nama, url 
+            FROM berkas_akademik 
+            WHERE tahun_akademik_kode= '$ta'
+            AND siswa_nisn = '$nisn'";
+    $dokumen = $this->db->query($sql)->result();
+    json_output(200, ['dokumen' => $dokumen]);
+  }
+
+  function submit_dokumen() {
+    $ta = $this->input->post('ta');
+    $nisn = $this->input->post('nisn');
+    $nama_berkas = strtolower($this->input->post('nama'));
+    if(!empty($_FILES['berkas']['name'])){
+
+      $this->load->library('gdrive');
+
+			$config['upload_path']    = './public';
+			$config['allowed_types']  = 'pdf';
+			$config['file_name']      = $ta . '_' . $nisn . '_' . $nama_berkas;
+			$config['overwrite']      = true;
+
+			$this->load->library('upload', $config);
+
+			// Alternately you can set preferences by calling the ``initialize()`` method. Useful if you auto-load the class:
+			$this->upload->initialize($config);
+			$do_upload = $this->upload->do_upload('berkas');
+			if($do_upload){
+        $data_upload = $this->upload->data();
+        $this->hapus_gdrive($ta, $nisn, $nama_berkas);
+        
+        // unggah ke gdrive
+        $file_id = $this->gdrive->unggah_share($data_upload['file_name']);
+        
+        $sql = "REPLACE INTO berkas_akademik (tahun_akademik_kode, siswa_nisn, nama, file_id)
+                VALUES ('$ta', '$nisn', '$nama_berkas', '$file_id')";
+        $this->db->query($sql);
+        
+        // hapus sisa berkas
+        unlink($data_upload['full_path']);
+
+        // kembalikan hasil
+        $hasil = array('pesan' => 'ok');
+			}else{
+        $hasil = array('pesan' => 'gagal', 'error' => $this->upload->display_errors(), 'request' => $request_data);
+      }
+      json_output(200, $hasil);
+    }
+  }
+
+  function delete_dokumen() {
+    $ta = $this->input->post('ta');
+    $nisn = $this->input->post('nisn');
+    $nama = $this->input->post('nama');
+
+    $this->hapus_gdrive($ta, $nisn, $nama);
+
+    $sql = "DELETE FROM berkas_akademik
+            WHERE tahun_akademik_kode = '$ta'
+            AND siswa_nisn ='$nisn' AND nama = '$nama'";
+    $this->db->query($sql);
+  }
+
+  function hapus_gdrive($ta, $nisn, $berkas) {
+    $sql = "SELECT file_id
+            FROM berkas_akademik
+            WHERE tahun_akademik_kode = '$ta' AND siswa_nisn = '$nisn' AND nama='$berkas'";
+    $q = $this->db->query($sql);
+    if($q->num_rows() > 0) {
+      $file_id = $q->row()->file_id;
+      $this->load->library('gdrive');
+      $this->gdrive->hapus($file_id);
+    }
+  }
+
 }
