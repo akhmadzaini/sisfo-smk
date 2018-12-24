@@ -124,7 +124,7 @@ class Ta extends Home_admin {
   function get_dokumen() {
     $ta = $this->input->post('ta');
     $nisn = $this->input->post('nisn');
-    $sql = "SELECT nama, url 
+    $sql = "SELECT nama, url, file_id 
             FROM berkas_akademik 
             WHERE tahun_akademik_kode= '$ta'
             AND siswa_nisn = '$nisn'";

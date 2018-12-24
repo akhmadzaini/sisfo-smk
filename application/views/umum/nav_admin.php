@@ -1,7 +1,7 @@
   <!-- Menu khusus admin -->
   <ul id="nav-mobile" class="sidenav sidenav-fixed collapsible collapsible-accordion">
     <li><center><img src="assets/img/<?=get_konfig('LOGO')?>?x=<?=string_acak(10)?>" alt="" class="logo_institusi"></center></li>
-    <li><a href="#" class=" waves-effect waves-green">Beranda</a></li>
+    <li><a href="?d=admin&c=dashboard" class=" waves-effect waves-green">Beranda</a></li>
     <li>
       <a href="#" class="collapsible-header waves-effect waves-green" tabindex="0">Data</a>
       <div class="collapsible-body">
