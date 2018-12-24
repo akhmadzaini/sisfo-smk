@@ -5,8 +5,8 @@ require_once FCPATH . 'vendor/autoload.php';
 class gdrive{
 
   function __construct() {
-    $credentialFile = FCPATH . 'gdrive/credentials.json';
-    $tokenFile = FCPATH . 'gdrive/token.json';
+    $credentialFile = 'F:/project/mamba\'ul-jadid/gdrive/credentials.json';
+    $tokenFile = 'F:/project/mamba\'ul-jadid/gdrive/token.json';
     $client = new Google_Client();
     $client->setAuthConfig($credentialFile);
     $client->setScopes("https://www.googleapis.com/auth/drive");
