@@ -139,7 +139,7 @@ $this->load->view('umum/footer');
       <i class="left material-icons">add</i> baru</a>';
       $.each(hasil.dokumen, function(key, val){
         layout_add += '<div class="chip" data-ta="'+ ta +'" data-nisn="'+ nisn +'" data-nama="'+ val.nama +'">\
-                        <a href="#">' + val.nama + '</a><i class="close material-icons">close</i></div>';
+                        <a href="https://drive.google.com/file/d/'+ val.file_id +'/view?usp=sharing" target="_blank">' + val.nama + '</a><i class="close material-icons">close</i></div>';
       });
       const layout = '<a class="btn-toggle-dokumen btn blue col l12" href="javascript:void(0);" \
                       data-target="dd-dokumen-'+ nisn +'"> <i class="left material-icons">get_app</i> '+ hasil.dokumen.length +' dokumen</a> \
@@ -197,10 +197,10 @@ $this->load->view('umum/footer');
         nama : $(this).parent().data('nama')
       };
       const url = '?d=admin/data&c=ta&m=delete_dokumen';
-      $('#dd-dokumen-' + data.nisn).waitMe();
+      $('body').waitMe();
       $.post(url, data, function() {
         muatDokumen(data.ta, data.nisn);
-        $('#dd-dokumen-' + data.nisn).waitMe('hide');
+        $('body').waitMe('hide');
       })
     });
 
