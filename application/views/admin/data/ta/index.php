@@ -24,6 +24,9 @@ $this->load->view('umum/header');
             <div class="col l12">
               <button class="btn blue waves-effect waves-light" type="submit"><i class="material-icons left">refresh</i> lihat data</button>
               <button id="btn-ta-baru" class="btn blue waves-effect waves-light" type="button"><i class="material-icons left">add</i> tahun akademik baru</button>
+              <?php if($this->input->get('ta') != ''):?>
+              <button id="btn-aktif" class="btn blue waves-effect waves-light" type="button"><i class="material-icons left">done_all</i> tambah siswa aktif</button>
+              <?php endif?>
             </div>
           </div>
         </form>
@@ -86,6 +89,32 @@ $this->load->view('umum/header');
       </form>
     </div>
 
+    <!-- modal tambah siswa -->
+    <div id="modal-aktif" class="modal">
+      <form action="<?=site_url('?d=admin/data&c=ta&m=tambah_aktif')?>" method="post">
+        <div class="modal-content">
+          <h4>Tambah siswa aktif</h4>
+          <input type="hidden" name="ta" value="<?=$this->input->get('ta')?>">
+          <div class="row">
+            <div class="input-field col l12">
+              <?=$this->html_gen->combo_jurusan()?>
+            </div>
+          </div>           
+          
+          <div class="row">
+            <div class="input-field col s12">
+              <?=$this->html_gen->combo_angkatan()?>
+            </div>
+          </div>   
+
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn blue waves-effect">simpan</button>
+          <button type="button" class="modal-close waves-effect btn-flat">batal</button>
+        </div>
+      </form>
+    </div>
+
   </div>
 </main>
 
@@ -124,6 +153,10 @@ $this->load->view('umum/footer');
 
     $('#btn-ta-baru').on('click', function() {
       $('#modal-editor-ta').modal('open');
+    });
+
+    $('#btn-aktif').on('click', function() {
+      $('#modal-aktif').modal('open');
     });
   });
 </script>

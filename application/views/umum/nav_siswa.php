@@ -11,8 +11,8 @@
         </ul>
       </div>
     </li>
-    <li><a href="#" class="waves-effect waves-green" tabindex="0">Profil Saya</a></li>
-    <li><a href="<?=site_url('?c=auth&m=logout')?>" class="waves-effect waves-green" tabindex="0">Keluar</a></li>
+    <li><a href="index.php?d=siswa&c=profile" class="waves-effect waves-green" tabindex="0">Profil Saya</a></li>
+    <li><a href="javascript:void(0)" class="btn-keluar waves-effect waves-green" tabindex="0">Keluar</a></li>
   </ul>
 
 </header>

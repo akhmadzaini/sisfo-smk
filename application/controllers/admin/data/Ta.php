@@ -198,4 +198,33 @@ class Ta extends Home_admin {
     }
   }
 
+  function tambah_aktif(){
+    $jurusan = $this->input->post('jurusan');
+    $angkatan = $this->input->post('angkatan');
+    $ta = $this->input->post('ta');
+
+    // 1. tambahkan siswa aktif kedalam tahun akademik
+    $this->db->where('status', 1);
+    $this->db->where('jurusan_kode', $jurusan);
+    $this->db->where('angkatan', $angkatan);
+
+    $this->db->select('nisn');
+    $data = $this->db->get('siswa')->result();
+    $this->db->trans_start();
+    foreach($data as $r){
+
+      $this->db->where('tahun_akademik_kode', $ta);
+      $this->db->where('siswa_nisn', $r->nisn);
+      $jml = $this->db->count_all_results('siswa_akademik');
+      if($jml == 0){
+        $this->db->set('tahun_akademik_kode', $ta);
+        $this->db->set('siswa_nisn', $r->nisn);
+        $this->db->set('status', 1);
+        $this->db->insert('siswa_akademik');
+      }
+    }
+    $this->db->trans_complete();
+    alihkan_laman('?d=admin/data&c=ta&ta=' . $ta);
+  }
+
 }

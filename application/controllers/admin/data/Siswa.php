@@ -55,7 +55,6 @@ class Siswa extends Home_admin {
             LEFT JOIN jurusan b ON a.jurusan_kode = b.kode
             WHERE a.angkatan = '$angkatan' AND a.jurusan_kode = '$jurusan_kode'
             ORDER BY nama";
-    log_message('custom', $sql);
     json_output(200, ['data' => $this->db->query($sql)->result_array()]);
   }
 

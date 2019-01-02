@@ -31,5 +31,35 @@ class html_gen{
             </select>
             <label for="bagian">Tahapan</label>';
   }
+
+  function combo_jurusan() {
+    $CI =& get_instance();
+    $sql = "SELECT kode, nama FROM jurusan";
+    $jurusan = $CI->db->query($sql)->result();
+    $add = '';
+    foreach($jurusan as $r){
+      $add .= '<option value="'.$r->kode.'">'.$r->nama.'</option>';
+    }
+    return '<select name="jurusan" id="jurusan" class="validate" required="">
+              <option value="" disabled selected>pilih jurusan</option>
+              '.$add.'
+            </select>
+            <label for="jurusan">Jurusan</label>';
+  }
+ 
+  function combo_angkatan() {
+    $CI =& get_instance();
+    $sql = "SELECT DISTINCT angkatan FROM siswa";
+    $jurusan = $CI->db->query($sql)->result();
+    $add = '';
+    foreach($jurusan as $r){
+      $add .= '<option value="'.$r->angkatan.'">'.$r->angkatan.'</option>';
+    }
+    return '<select name="angkatan" id="angkatan" class="validate" required="">
+              <option value="" disabled selected>pilih angkatan</option>
+              '.$add.'
+            </select>
+            <label for="angkatan">Angkatan</label>';
+  }
   
 }
